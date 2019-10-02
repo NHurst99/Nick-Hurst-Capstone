@@ -1,36 +1,9 @@
 
-#include <power_mgt.h>
-#include <platforms.h>
-#include <pixeltypes.h>
-#include <pixelset.h>
-#include <noise.h>
-#include <lib8tion.h>
-#include <led_sysdefs.h>
-#include <hsv2rgb.h>
-#include <fastspi_types.h>
-#include <fastspi_ref.h>
-#include <fastspi_nop.h>
-#include <fastspi_dma.h>
-#include <fastspi_bitbang.h>
-#include <fastspi.h>
-#include <fastpin.h>
-#include <fastled_progmem.h>
-#include <fastled_delay.h>
-#include <fastled_config.h>
-#include <FastLED.h>
-#include <dmx.h>
-#include <cpp_compat.h>
-#include <controller.h>
-#include <colorutils.h>
-#include <colorpalettes.h>
-#include <color.h>
-#include <chipsets.h>
-#include <bitswap.h>
-#include <CEC.h>
-#include <CEC_Device.h>
-#include <CEC_Electrical.h>
+#include <Serial.h>
 #include <Common.h>
-
+#include <CEC_Electrical.h>
+#include <CEC_Device.h>
+#include <CEC.h>
 char **command;      // a String to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 String inputString = "";         // a String to hold incoming data
@@ -57,6 +30,7 @@ void loop() {
 		char * pch = strtok(str, ":");
 
 		while (pch != NULL) {
+			//Converts string to long
 			intArray[counter] = strtol(pch, NULL, 16);
 			pch = strtok(NULL, ":");
 			counter++;
