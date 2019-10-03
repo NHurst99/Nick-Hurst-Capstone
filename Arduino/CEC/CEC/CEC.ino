@@ -4,10 +4,8 @@
 #include <CEC_Electrical.h>
 #include <CEC_Device.h>
 #include <CEC.h>
-char **command;      // a String to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 String inputString = "";         // a String to hold incoming data
-char str[48];;
 int intArray[16]; // Maximum number of hex numbers.
 
 void setup() {
@@ -19,6 +17,8 @@ void setup() {
 }
 
 void loop() {
+	//TODO: Last char/byte(?) of string gets cut off, figure out why
+
 
 	// print the string when a newline arrives:
 	if (stringComplete) {
