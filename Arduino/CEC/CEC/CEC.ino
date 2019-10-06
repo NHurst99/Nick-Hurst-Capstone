@@ -6,6 +6,7 @@
 #include <CEC.h>
 boolean stringComplete = false;  // whether the string is complete
 String inputString = "";         // a String to hold incoming data
+char str[48];;
 int intArray[16]; // Maximum number of hex numbers.
 
 void setup() {
