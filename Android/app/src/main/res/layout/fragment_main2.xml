@@ -2,50 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Devices:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ToggleButton
-            android:id="@+id/destTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TV"
-            android:textOff="TV"
-            android:textOn="TV"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="43dp" />
-
-        <ToggleButton
-            android:id="@+id/destPlay1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Playback 1"
-            android:textOff="Playback 1"
-            android:textOn="Playback 1"
-            tools:layout_editor_absoluteX="104dp"
-            tools:layout_editor_absoluteY="43dp"
-            tools:text="PLayback 1" />
-    </RadioGroup>
+    app:tabMode="scrollable"
+    tools:context=".Main2Activity$PlaceholderFragment">
 
     <TextView
         android:id="@+id/textView2"
@@ -119,32 +80,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <ScrollView
-        android:id="@+id/devices"
-        android:layout_width="395dp"
-        android:layout_height="136dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="153dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5">
-
-        <LinearLayout
-            android:id="@+id/deviceList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
-
-    <Button
-        android:id="@+id/switchAct"
+    <TextView
+        android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="109dp"
-        android:layout_marginTop="32dp"
-        android:onClick="switchV"
-        android:text="Switch to Tabs"
-        app:layout_constraintStart_toEndOf="@+id/radioGroup"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recievedText"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
 </android.support.constraint.ConstraintLayout>
