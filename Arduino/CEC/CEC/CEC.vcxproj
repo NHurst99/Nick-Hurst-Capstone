@@ -119,7 +119,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties config.Debug.customdebug_uno_debugger_type="universal" />
+      <UserProperties config.Debug.customdebug_uno_debugger_type="universal" custom_uno_vm.programmer_name="avrispmkii" custom_uno_vm.upload.useprogrammer="1" arduino.upload.port="COM3" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

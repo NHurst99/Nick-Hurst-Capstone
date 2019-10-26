@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
 import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,20 +39,29 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         List<BluetoothDevice> pairedDevices = bluetoothManager.getPairedDevicesList();
-        for (BluetoothDevice device : pairedDevices) {
-            TextView tv = new TextView(this);
-            tv.setText(device.getName());
-            tv.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // do stuff here
-                    connectDevice(device.getAddress());
-                }
-            });
-            ((LinearLayout)findViewById(R.id.deviceList)).addView(tv );
-            Log.d("My Bluetooth App", "Device name: " + device.getName());
-            Log.d("My Bluetooth App", "Device MAC Address: " + device.getAddress());
-        }
+        List<BluetoothDevice> matchingDevices = new ArrayList<>();
 
+        for (BluetoothDevice device : pairedDevices) {
+            if(device.getName().equals(R.string.device_name)) {
+                matchingDevices.add(device);
+                TextView tv = new TextView(this);
+                tv.setText(device.getName());
+                tv.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // do stuff here
+                        connectDevice(device.getAddress());
+                    }
+                });
+                ((LinearLayout) findViewById(R.id.deviceList)).addView(tv);
+            }
+
+            Log.d("CECRemote", "Device name: " + device.getName());
+            Log.d("CECRemote", "Device MAC Address: " + device.getAddress());
+        }
+        if (matchingDevices.size() == 1){
+            connectDevice(matchingDevices.get(0).getAddress());
+
+        }
 
 
     }
@@ -61,23 +74,6 @@ public class MainActivity extends AppCompatActivity {
         String command = "F0";
         //check which destination is checked
 
-//        Button checkedDestButton = findViewById(((RadioGroup)(findViewById(R.id.radioGroup))).getCheckedRadioButtonId());
-//        if (checkedDestButton.getId() == -1)
-//        {
-//            // no radio buttons are checked
-//        }
-//        else
-//        {
-//            switch (checkedDestButton.getId()){
-//                case R.id.destPlay1:
-//                    command += "4";
-//                    break;
-//                case R.id.destTV:
-//                    command += "0";
-//                    break;
-//            }
-//            // one of the radio buttons is checked
-//        }
 
         command += ":44:";
 
@@ -120,17 +116,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void onMessageSent(String message) {
         // We sent a message! Handle it here.
+        ((TextView)findViewById(R.id.recievedText)).setText("");
         Toast.makeText(this, "Sent a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
     }
 
     private void onMessageReceived(String message) {
         // We received a message! Handle it here.
-        ((TextView)findViewById(R.id.recievedText)).setText(message);
+        ((TextView)findViewById(R.id.recievedText)).setText(((TextView)findViewById(R.id.recievedText)).getText()+" " + message);
         Toast.makeText(this, "Received a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
     }
 
     private void onError(Throwable error) {
         // Handle the error
+    }
+
+
+    public void switchV (View v){
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
     }
 
 }
