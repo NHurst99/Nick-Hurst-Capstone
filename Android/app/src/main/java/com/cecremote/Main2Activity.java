@@ -1,98 +1,17 @@
-//package com.cecremote;
-//
-//import android.support.design.widget.TabLayout;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentStatePagerAdapter;
+package com.cecremote;
+
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
+import com.cecremote.ui.main.SectionsPagerAdapter;
 
-import com.cecremote.R;
-
-
-public class Main2Activity2 extends Fragment {
-    // When requested, this adapter returns a DemoObjectFragment,
-    // representing an object in the collection.
-    DemoCollectionPagerAdapter demoCollectionPagerAdapter;
-    ViewPager viewPager;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-    @Nullable ViewGroup container,
-    @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.collection_demo, container, false);
-        }
-
-@Override
-public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        demoCollectionPagerAdapter = new DemoCollectionPagerAdapter(getChildFragmentManager());
-        viewPager = view.findViewById(R.id.pager);
-        viewPager.setAdapter(demoCollectionPagerAdapter);
-        }
-        }
-
-public class Main2Activity extends FragmentStatePagerAdapter {
-    public Main2Activity(FragmentManager fm) {
-        super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int i) {
-        Fragment fragment = new DemoObjectFragment();
-        Bundle args = new Bundle();
-        // Our object is just an integer :-P
-        args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public int getCount() {
-        return 100;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return "OBJECT " + (position + 1);
-    }
-}
-
-// Instances of this class are fragments representing a single
-// object in our collection.
-public class DemoObjectFragment extends Fragment {
-    public static final String ARG_OBJECT = "object";
-
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main2, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        ((TextView) view.findViewById(android.R.id.text1))
-                .setText(Integer.toString(args.getInt(ARG_OBJECT)));
-    }
-}
-
-//public class Main2Activity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity {
 
 
 //
@@ -104,43 +23,155 @@ public class DemoObjectFragment extends Fragment {
 //     * may be best to switch to a
 //     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 //     */
-//    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 //
 //    /**
 //     * The {@link ViewPager} that will host the section contents.
 //     */
-//    private ViewPager mViewPager;
+    private ViewPager mViewPager;
 //
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main2);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main2);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
+
+//        findViewById(R.id.main_content)
+
+}
+
+    public void blah(View v){
+        Main2Activity2 cf =(Main2Activity2) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 //
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        // Create the adapter that will return a fragment for each of the three
-//        // primary sections of the activity.
-//        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//
-//        // Set up the ViewPager with the sections adapter.
-//        mViewPager = (ViewPager) findViewById(R.id.container);
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-//
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-//
-//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-//
-//    }
+        findViewById(R.id.powerButton).setOnTouchListener(holdListener);
+        findViewById(R.id.inputButton).setOnTouchListener(holdListener);
+
+        findViewById(R.id.pad_0).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_1).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_2).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_3).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_4).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_5).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_6).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_7).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_8).setOnTouchListener(holdListener);
+        findViewById(R.id.pad_9).setOnTouchListener(holdListener);
+        findViewById(R.id.dash_button).setOnTouchListener(holdListener);
+
+
+        findViewById(R.id.up_button).setOnTouchListener(holdListener);
+        findViewById(R.id.dot_button).setOnTouchListener(holdListener);
+        findViewById(R.id.down_button).setOnTouchListener(holdListener);
+
+    }
+
+    public void generateCommand(View v) {
+        //TODO: Change dest device according to page
+        String command = "F0";
+        //check which destination is checked
+
+        //User control pressed RCPT
+        command += ":44:";
+
+        switch(v.getId()) {
+            case R.id.powerButton:
+                command += "40";
+                break;
+            case R.id.inputButton:
+                command += "34";
+                break;
+            case R.id.pad_0:
+                command += "20";
+                break;
+            case R.id.pad_1:
+                command += "21";
+                break;
+            case R.id.pad_2:
+                command += "22";
+                break;
+            case R.id.pad_3:
+                command += "23";
+                break;
+            case R.id.pad_4:
+                command += "24";
+                break;
+            case R.id.pad_5:
+                command += "25";
+                break;
+            case R.id.pad_6:
+                command += "26";
+                break;
+            case R.id.pad_7:
+                command += "27";
+                break;
+            case R.id.pad_8:
+                command += "28";
+                break;
+            case R.id.pad_9:
+                command += "29";
+                break;
+            case R.id.dash_button:
+                command += "2A";
+                break;
+            case R.id.up_button:
+                command += "01";
+                break;
+            case R.id.dot_button:
+                command += "00";
+                break;
+            case R.id.down_button:
+                command += "02";
+                break;
+            default:
+                throw new RuntimeException("Unknown button ID");
+        }
+        command += ":";
+        transmitCommand(command);
+
+
+    }
+    private boolean isFirstPress = true;
+    public View.OnTouchListener holdListener = new View.OnTouchListener() {
+        @Override
+        public  boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && isFirstPress) {
+                generateCommand(v);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                transmitCommand("F0:45");
+            }
+
+            return true;
+        }
+
+    };
+    private void transmitCommand(String command) {
+        //TODO: Add bluetooth nonsense
+        Log.d("Command", command);
+    }
+
+    }
+
+
+
+//    ((TextView)findViewById(R.id.generatedCommand)).setText(command);
+//    deviceInterface.sendMessage(command);
+
 //
 //
 //    @Override
@@ -228,4 +259,3 @@ public class DemoObjectFragment extends Fragment {
 //            return "OBJECT " + (position + 1);
 //        }
 //    }
-//}
