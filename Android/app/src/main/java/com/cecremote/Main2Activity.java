@@ -1,6 +1,8 @@
 package com.cecremote;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cecremote.ui.main.SectionsPagerAdapter;
+import com.harrysoft.androidbluetoothserial.BluetoothManager;
+import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice;
+import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -29,11 +41,50 @@ public class Main2Activity extends AppCompatActivity {
 //     * The {@link ViewPager} that will host the section contents.
 //     */
     private ViewPager mViewPager;
-//
+    BluetoothManager bluetoothManager = null;
+    private SimpleBluetoothDeviceInterface deviceInterface;
+    private String deviceMAC;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        bluetoothManager = BluetoothManager.getInstance();
+        if (bluetoothManager == null) {
+            // Bluetooth unavailable on this device :( tell the user
+            Toast.makeText(this, "Bluetooth not available.", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+            finish();
+        }
+        List<BluetoothDevice> pairedDevices = bluetoothManager.getPairedDevicesList();
+        List<BluetoothDevice> matchingDevices = new ArrayList<>();
+
+        for (BluetoothDevice device : pairedDevices) {
+            if(device.getName().equals(getString( R.string.device_name))) {
+                matchingDevices.add(device);
+//                TextView tv = new TextView(this);
+//                tv.setText(device.getName());
+//                tv.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View v) {
+//                        // do stuff here
+//                        connectDevice(device.getAddress());
+//                    }
+//                });
+//                ((LinearLayout) findViewById(R.id.deviceList)).addView(tv);
+            }
+
+            Log.d("BluetoothDevices", "Device name: " + device.getName());
+            Log.d("BluetoothDevices", "Device MAC Address: " + device.getAddress());
+        }
+        if (matchingDevices.size() == 1){
+            Log.d("BluetoothConnection","One device found, attempting to connect");
+            connectDevice(matchingDevices.get(0).getAddress());
+            deviceMAC = matchingDevices.get(0).getAddress();
+        }else if(matchingDevices.size() == 0){
+            Log.d("BluetoothConnection","No devices found");
+        }else {
+            Log.d("BluetoothConnection","Multiple devices found, connecting to first");
+            connectDevice(matchingDevices.get(0).getAddress());
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,7 +93,7 @@ public class Main2Activity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -76,8 +127,17 @@ public class Main2Activity extends AppCompatActivity {
 
 
         findViewById(R.id.up_button).setOnTouchListener(holdListener);
-        findViewById(R.id.dot_button).setOnTouchListener(holdListener);
+        findViewById(R.id.left_button).setOnTouchListener(holdListener);
+        findViewById(R.id.right_button).setOnTouchListener(holdListener);
         findViewById(R.id.down_button).setOnTouchListener(holdListener);
+        findViewById(R.id.dot_button).setOnTouchListener(holdListener);
+
+
+        findViewById(R.id.channel_down_button).setOnTouchListener(holdListener);
+        findViewById(R.id.channel_up_button).setOnTouchListener(holdListener);
+        findViewById(R.id.vol_down_button).setOnTouchListener(holdListener);
+        findViewById(R.id.vol_up_btton).setOnTouchListener(holdListener);
+
 
     }
 
@@ -96,6 +156,8 @@ public class Main2Activity extends AppCompatActivity {
             case R.id.inputButton:
                 command += "34";
                 break;
+
+
             case R.id.pad_0:
                 command += "20";
                 break;
@@ -129,14 +191,35 @@ public class Main2Activity extends AppCompatActivity {
             case R.id.dash_button:
                 command += "2A";
                 break;
+
+
             case R.id.up_button:
                 command += "01";
+                break;
+            case R.id.left_button:
+                command += "03";
+                break;
+            case R.id.right_button:
+                command += "04";
+                break;
+            case R.id.down_button:
+                command += "02";
                 break;
             case R.id.dot_button:
                 command += "00";
                 break;
-            case R.id.down_button:
-                command += "02";
+
+            case R.id.channel_up_button:
+                command += "30";
+                break;
+            case R.id.channel_down_button:
+                command += "31";
+                break;
+            case R.id.vol_up_btton:
+                command += "41";
+                break;
+            case R.id.vol_down_button:
+                command += "42";
                 break;
             default:
                 throw new RuntimeException("Unknown button ID");
@@ -153,7 +236,7 @@ public class Main2Activity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_DOWN && isFirstPress) {
                 generateCommand(v);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                transmitCommand("F0:45");
+                transmitCommand("F0:45:");
             }
 
             return true;
@@ -162,12 +245,48 @@ public class Main2Activity extends AppCompatActivity {
     };
     private void transmitCommand(String command) {
         //TODO: Add bluetooth nonsense
+        if(deviceInterface == null){
+            connectDevice(deviceMAC);
+        }else{
+        deviceInterface.sendMessage(command);
         Log.d("Command", command);
+
+        }
     }
 
+
+    private void connectDevice(String mac) {
+        bluetoothManager.openSerialDevice(mac)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::onConnected, this::onError);
+    }
+    private void onConnected(BluetoothSerialDevice connectedDevice) {
+        // You are now connected to this device!
+        // Here you may want to retain an instance to your device:
+        deviceInterface = connectedDevice.toSimpleDeviceInterface();
+
+        // Listen to bluetooth events
+        deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError);
+        Snackbar.make(findViewById(R.id.toolbar), "Connected", Snackbar.LENGTH_LONG).show();
     }
 
+    private void onMessageSent(String message) {
+        Log.d("MessageSentSuccess", message);
+    }
 
+    private void onMessageReceived(String message) {
+        // We received a message! Handle it here.
+//        ((TextView)findViewById(R.id.recievedText)).setText(((TextView)findViewById(R.id.recievedText)).getText()+" " + message);
+        Snackbar.make(findViewById(R.id.toolbar), message, Snackbar.LENGTH_LONG).show();
+//        Toast.makeText(this, "Received a message! Message was: " + message, Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+    }
+
+    private void onError(Throwable error) {
+        // Handle the error
+        Log.e("Bluetooth Error", error.getMessage());
+    }
+    }
 
 //    ((TextView)findViewById(R.id.generatedCommand)).setText(command);
 //    deviceInterface.sendMessage(command);
