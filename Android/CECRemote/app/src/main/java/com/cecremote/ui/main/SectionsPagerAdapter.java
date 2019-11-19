@@ -1,6 +1,8 @@
 package com.cecremote.ui.main;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -30,7 +32,10 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1, "poweronoffnavigation");
+        SharedPreferences settings = mContext.getSharedPreferences("options", 0);
+        String fragmentOptions = settings.getString("options"+position, "");
+        return PlaceholderFragment.newInstance(position , fragmentOptions);
+//        return PlaceholderFragment.newInstance(position + 1, "poweronoffnavigation");
     }
 //
 //    @Nullable

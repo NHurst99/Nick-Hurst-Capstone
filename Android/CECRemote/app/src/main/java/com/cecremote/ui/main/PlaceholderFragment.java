@@ -70,12 +70,20 @@ public class PlaceholderFragment extends Fragment {
             ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("Off",'b',50,100,132, 16));
         }
         if(stringOptions.contains("navigation")){
-            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬆",'a',50,50,16,8));
-            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬅",'b',50,50,132, 16));
-            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("➡",'a',50,50,16,8));
-            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬇",'b',50,50,132, 16));
-            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⏺",'b',50,50,132, 16));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬅",'c',50,50,132, 16));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("➡",'d',50,50,16,8));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬆",'e',50,50,16,8));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("⬇",'f',50,50,132, 16));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton(" ⏺",'g',50,50,132, 16));
 
+        }
+        if(stringOptions.contains("volume")){
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("Vol +",'h',50,100,16,8));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("Vol -",'i',50,100,132, 16));
+        }
+        if(stringOptions.contains("channel")){
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("Cha +",'j',50,100,16,8));
+            ((ConstraintLayout)root.findViewById(R.id.constraintLayout)).addView(generateButton("Cha -",'k',50,100,132, 16));
         }
 
         return root;
